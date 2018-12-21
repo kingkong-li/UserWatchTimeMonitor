@@ -3,6 +3,7 @@ package com.example.jingangli.userwatchtimemonitor;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MyHolder> {
 
+    private static final String TAG = MyRecyclerViewAdapter.class.getSimpleName();
     private Context mContext;
     private List<NodeInfo> mData;
 
@@ -23,6 +25,17 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         mData=data;
     }
 
+    @Override
+    public void onViewAttachedToWindow(@NonNull MyHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        Log.v(TAG,"onViewAttachedToWindow  "+String.valueOf(holder.nodeName.getText()));
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull MyHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        Log.v(TAG,"onViewDetachedFromWindow "+String.valueOf(holder.nodeName.getText()));
+    }
 
     @NonNull
     @Override
