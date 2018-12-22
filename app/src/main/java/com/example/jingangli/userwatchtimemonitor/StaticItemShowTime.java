@@ -5,20 +5,30 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * 统计Item显示时间辅助类
+ * @author jingang.li
+ */
 public class StaticItemShowTime {
     private static final String TAG = StaticItemShowTime.class.getSimpleName();
     private static StaticItemShowTime mInstance;
-
-
-    private long mWatchTimes[];
-    private long mTimeIn[];
-    private long mTimeOut[];
-    private boolean mLastVisibleState[];
+    /**
+     * 每个Item显示时间
+     */
+    private long[] mWatchTimes;
+    /**
+     * 中间变量，可见时刻
+     */
+    private long[] mVisibleMoment;
+    private long[] mInVisibleMoment;
+    private boolean[] mLastVisibleState;
     private int mItemCount=0;
+    /**第一个可见的Item*/
     private int mFirstVisibleChild;
+    /**最后一个可见的Item*/
     private int mLastVisibleChild;
+    /**是否初始化*/
     private boolean mIsInit=false;
 
     public static synchronized StaticItemShowTime getInstance(){
@@ -36,17 +46,16 @@ public class StaticItemShowTime {
      * 初始化值
      * @param count item数目
      */
-    public void init(int count){
-
+    private void init(int count){
         mWatchTimes=new long[count];
-        mTimeIn=new long[count];
-        mTimeOut=new long[count];
+        mVisibleMoment =new long[count];
+        mInVisibleMoment =new long[count];
         mLastVisibleState=new boolean[count];
         for(int i=0;i<count;i++)
         {
             mWatchTimes[i]=0;
-            mTimeIn[i]=0;
-            mTimeOut[i]=0;
+            mVisibleMoment[i]=0;
+            mInVisibleMoment[i]=0;
             mLastVisibleState[i]=false;
 
         }
@@ -54,6 +63,7 @@ public class StaticItemShowTime {
     }
     /**
      * 重新计算每项显示时间
+     * 要进行异步处理
      */
     public void reCalculateItemShowTime(RecyclerView recyclerView){
 
@@ -79,44 +89,39 @@ public class StaticItemShowTime {
             if(i>= mFirstVisibleChild && i<= mLastVisibleChild )
             {
                 if(!mIsInit){
-                    mTimeIn[i]=System.currentTimeMillis();
+                    mVisibleMoment[i]=System.currentTimeMillis();
                     mLastVisibleState[i]=true;
                     mIsInit=true;
                 }else if(!mLastVisibleState[i])
                 {
-                    mTimeIn[i]=System.currentTimeMillis();
+                    mVisibleMoment[i]=System.currentTimeMillis();
                     mLastVisibleState[i]=true;
                 }else if(mLastVisibleState[i])
                 {
-                    mTimeOut[i]=System.currentTimeMillis();
-                    if(mTimeOut[i]>mTimeIn[i])
+                    mInVisibleMoment[i]=System.currentTimeMillis();
+                    if(mInVisibleMoment[i]> mVisibleMoment[i])
                     {
-                        mWatchTimes[i]=mWatchTimes[i]+mTimeOut[i]-mTimeIn[i];
-                        mTimeOut[i]=0;
-                        mTimeIn[i]=System.currentTimeMillis();
+                        mWatchTimes[i]=mWatchTimes[i]+ mInVisibleMoment[i]- mVisibleMoment[i];
+                        mInVisibleMoment[i]=0;
+                        mVisibleMoment[i]=System.currentTimeMillis();
 
                     }
                 }
-
 
             }
             if((i< mFirstVisibleChild || i> mLastVisibleChild) && mLastVisibleState[i]){
 
 
-                    mTimeOut[i]=System.currentTimeMillis();
-                   if(mTimeOut[i]>mTimeIn[i])
+                    mInVisibleMoment[i]=System.currentTimeMillis();
+                   if(mInVisibleMoment[i]> mVisibleMoment[i])
                     {
-                        mWatchTimes[i]=mWatchTimes[i]+mTimeOut[i]-mTimeIn[i];
-                        mTimeOut[i]=0;
+                        mWatchTimes[i]=mWatchTimes[i]+ mInVisibleMoment[i]- mVisibleMoment[i];
+                        mInVisibleMoment[i]=0;
 
                     }
                     mLastVisibleState[i]=false;
 
-            }else{
-
-                // 可见状态未变化 不做记录
             }
-
 
             Log.d(TAG,"mWatchTimes["+i+"]:"+mWatchTimes[i]);
 
@@ -124,6 +129,10 @@ public class StaticItemShowTime {
 
 
     }
+
+    /**
+     * 存储每一个Item的显示时间、可以跟以前的进行合并
+     */
     public void storeItemsWatchTime()
     {
         for(int i=0;i<mItemCount;i++)
