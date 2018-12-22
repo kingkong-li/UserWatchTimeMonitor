@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">UserWatchTimeMonitor</string>
     <string name="enter_recycler_view">Intent to RecyclerActivity</string>
-    <string name="show_time">show time:%s </string>
+    <string name="show_time">show time:%s ms</string>
 </resources>

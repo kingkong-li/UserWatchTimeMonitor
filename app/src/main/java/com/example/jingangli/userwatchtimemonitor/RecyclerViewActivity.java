@@ -16,12 +16,13 @@ import java.util.List;
 public class RecyclerViewActivity extends Activity {
 
     private static final String TAG =RecyclerViewActivity.class.getSimpleName() ;
+    RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_view);
-        RecyclerView mRecyclerView = findViewById(R.id.recycler_view);
+        mRecyclerView = findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -34,7 +35,10 @@ public class RecyclerViewActivity extends Activity {
             nodeInfo.nodeShowTime=" "+1000*Math.random()+"ms";
             data.add(nodeInfo);
         }
-        MyRecyclerViewAdapter recyclerViewAdapter =new MyRecyclerViewAdapter(this,data);
+
+
+
+        final MyRecyclerViewAdapter recyclerViewAdapter =new MyRecyclerViewAdapter(this,data);
         mRecyclerView.setAdapter(recyclerViewAdapter);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -42,27 +46,34 @@ public class RecyclerViewActivity extends Activity {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 Log.d(TAG,"newState="+newState);
+                StaticItemShowTime.getInstance().reCalculateItemShowTime(recyclerView);
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-                if (layoutManager instanceof LinearLayoutManager) {
-                    LinearLayoutManager linearManager = (LinearLayoutManager) layoutManager;
-                    int childCount= recyclerView.getChildCount();
-                    int visibleCount= linearManager.getChildCount();
-                    int total=linearManager.getItemCount();
-                    int firstVisibleChild=linearManager.findFirstVisibleItemPosition();
-                    int lastVisibleChild=linearManager.findLastVisibleItemPosition();
-                    Log.v(TAG,"onScrolled:"+"childCount="+childCount+
-                            ",visibleCount="+visibleCount+", total="+total+",firstVisibleChild ="
-                            +firstVisibleChild+", lastVisibleChild="+lastVisibleChild);
-                }
+                StaticItemShowTime.getInstance().reCalculateItemShowTime(recyclerView);
+                recyclerViewAdapter.refreshData(StaticItemShowTime.getInstance().getShowTimes());
             }
         });
 
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        StaticItemShowTime.getInstance().resetInitState();
+        StaticItemShowTime.getInstance().reCalculateItemShowTime(mRecyclerView);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        StaticItemShowTime.getInstance().reCalculateItemShowTime(mRecyclerView);
+        StaticItemShowTime.getInstance().storeItemsWatchTime();
+
+        StaticItemShowTime.getInstance().resetInitState();
     }
 }

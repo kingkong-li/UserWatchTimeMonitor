@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,6 +53,15 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         holder.showTime.setText(showTimeString);
 
     }
+    public void refreshData(ArrayList<String> showTimeList)
+    {
+        for(int i=0;i<showTimeList.size();i++)
+        {
+            mData.get(i).nodeShowTime=showTimeList.get(i);
+        }
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public int getItemCount() {
