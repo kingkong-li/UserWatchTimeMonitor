@@ -16,7 +16,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RecyclerViewActivity"></activity>
+        <activity android:name=".RecyclerViewActivity">
+
+        </activity>
+        <provider
+            android:name=".MyContentProvider"
+            android:authorities="com.example.user_watch_time_monitor"
+            android:exported="true"
+            android:permission="com.example.my_monitor.permission" />
     </application>
 
 </manifest>

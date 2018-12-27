@@ -31,8 +31,8 @@ public class RecyclerViewActivity extends Activity {
         for(int i=0;i<content.length();i++){
             NodeInfo nodeInfo=new NodeInfo();
             nodeInfo.nodeName=content.substring(i,i+1);
-            // 这里要填上具体的观看时间
-            nodeInfo.nodeShowTime=" "+1000*Math.random()+"ms";
+            // 初始化观看时间为0ms
+            nodeInfo.nodeShowTime=" "+0+"ms";
             data.add(nodeInfo);
         }
 
@@ -46,13 +46,13 @@ public class RecyclerViewActivity extends Activity {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 Log.d(TAG,"newState="+newState);
-                StaticItemShowTime.getInstance().reCalculateItemShowTime(recyclerView);
+//                StaticItemShowTime.getInstance().reCalculateItemShowTime(recyclerView);
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                StaticItemShowTime.getInstance().reCalculateItemShowTime(recyclerView);
+//                StaticItemShowTime.getInstance().reCalculateItemShowTime(recyclerView);
                 recyclerViewAdapter.refreshData(StaticItemShowTime.getInstance().getShowTimes());
             }
         });
