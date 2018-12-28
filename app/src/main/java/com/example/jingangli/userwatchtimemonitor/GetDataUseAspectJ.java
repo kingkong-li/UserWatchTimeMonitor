@@ -38,8 +38,9 @@ public class GetDataUseAspectJ {
     @After("onViewScrolled()")
     public void onRecyclerViewScrolled(JoinPoint joinPoint) {
         Log.d(TAG, "getScroll length" + joinPoint.getArgs().length
-                +joinPoint.getSignature().toLongString());
-        RecyclerView recyclerView = null;
+                +joinPoint.getSignature().toLongString()+" short String="+
+                joinPoint.getSignature().toShortString());
+        RecyclerView recyclerView;
         if(joinPoint.getArgs()[0] instanceof   RecyclerView )
         {
             recyclerView =(RecyclerView)joinPoint.getArgs()[0];

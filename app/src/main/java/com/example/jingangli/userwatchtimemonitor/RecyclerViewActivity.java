@@ -2,6 +2,8 @@ package com.example.jingangli.userwatchtimemonitor;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +11,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author jingang.li
@@ -17,6 +20,8 @@ public class RecyclerViewActivity extends Activity {
 
     private static final String TAG =RecyclerViewActivity.class.getSimpleName() ;
     RecyclerView mRecyclerView;
+    MyRecyclerViewAdapter recyclerViewAdapter;
+    private volatile boolean mIsInvisible=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +43,7 @@ public class RecyclerViewActivity extends Activity {
 
 
 
-        final MyRecyclerViewAdapter recyclerViewAdapter =new MyRecyclerViewAdapter(this,data);
+        recyclerViewAdapter =new MyRecyclerViewAdapter(this,data);
         mRecyclerView.setAdapter(recyclerViewAdapter);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -47,30 +52,57 @@ public class RecyclerViewActivity extends Activity {
                 super.onScrollStateChanged(recyclerView, newState);
                 Log.d(TAG,"newState="+newState);
 //                StaticItemShowTime.getInstance().reCalculateItemShowTime(recyclerView);
+                // 动态代理监听
+                  ViewDelegate.getInstance().execute();
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-//                StaticItemShowTime.getInstance().reCalculateItemShowTime(recyclerView);
+                StaticItemShowTime.getInstance().reCalculateItemShowTime(recyclerView);
                 recyclerViewAdapter.refreshData(StaticItemShowTime.getInstance().getShowTimes());
             }
         });
 
 
 
+
     }
+
+
+
+    private Handler handler = new Handler();
+
+    private Runnable myRunnable= new Runnable() {
+
+        @Override
+        public void run() {
+
+            if (mIsInvisible) {
+                StaticItemShowTime.getInstance().reCalculateItemShowTime(mRecyclerView);
+                recyclerViewAdapter.refreshData(StaticItemShowTime.getInstance().getShowTimes());
+                handler.postDelayed(this, 100);
+
+            }
+
+
+        }
+    };
 
     @Override
     protected void onResume() {
+        mIsInvisible=true;
+
         super.onResume();
         StaticItemShowTime.getInstance().resetInitState();
         StaticItemShowTime.getInstance().reCalculateItemShowTime(mRecyclerView);
+        handler.postDelayed(myRunnable,1000);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        mIsInvisible=false;
         StaticItemShowTime.getInstance().reCalculateItemShowTime(mRecyclerView);
         StaticItemShowTime.getInstance().storeItemsWatchTime();
 

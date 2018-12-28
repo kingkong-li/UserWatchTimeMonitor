@@ -3,6 +3,7 @@
     package="com.example.jingangli.userwatchtimemonitor">
 
     <application
+        android:name=".MainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -16,14 +17,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RecyclerViewActivity">
+        <activity android:name=".RecyclerViewActivity"></activity>
 
-        </activity>
         <provider
             android:name=".MyContentProvider"
             android:authorities="com.example.user_watch_time_monitor"
             android:exported="true"
             android:permission="com.example.my_monitor.permission" />
+
+        <activity android:name=".MyFragmentActivity"></activity>
     </application>
 
 </manifest>

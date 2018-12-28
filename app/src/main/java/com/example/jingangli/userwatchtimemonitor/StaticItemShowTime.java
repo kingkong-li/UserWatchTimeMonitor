@@ -64,9 +64,11 @@ public class StaticItemShowTime {
     /**
      * 重新计算每项显示时间
      * 要进行异步处理
+     * 可以通过切点路径来区分RecyclerView
      */
     public void reCalculateItemShowTime(RecyclerView recyclerView){
 
+        Log.d(TAG,recyclerView.getAdapter().getClass().getSimpleName());
         RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
         if (layoutManager instanceof LinearLayoutManager) {
             LinearLayoutManager linearManager = (LinearLayoutManager) layoutManager;

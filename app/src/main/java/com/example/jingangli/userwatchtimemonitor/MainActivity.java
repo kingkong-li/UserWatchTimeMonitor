@@ -27,5 +27,15 @@ public class MainActivity extends Activity {
                 mContext.startActivity(intent);
             }
         });
+        Button btnEnterFragment=findViewById(R.id.enter_fragment_activity);
+        btnEnterFragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent();
+                intent.setClass(mContext,MyFragmentActivity.class);
+                mContext.startActivity(intent);
+            }
+        });
+
     }
 }
