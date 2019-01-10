@@ -22,8 +22,8 @@ public class GetDataUseAspectJ {
 
     }
     @Before("onViewClicked()")
-    public void beforViewClick(JoinPoint joinPoint) {
-        Log.d(TAG, "beforViewClick:" + joinPoint.toShortString()+joinPoint.getKind());
+    public void beforeViewClick(JoinPoint joinPoint) {
+        Log.d(TAG, "beforeViewClick:" + joinPoint.toShortString()+joinPoint.getKind());
     }
     @After("onViewClicked()")
     public void afterViewClick(JoinPoint joinPoint) {
@@ -37,15 +37,17 @@ public class GetDataUseAspectJ {
 
     @After("onViewScrolled()")
     public void onRecyclerViewScrolled(JoinPoint joinPoint) {
-        Log.d(TAG, "getScroll length" + joinPoint.getArgs().length
+        Log.d(TAG, "onRecyclerViewScrolled length" + joinPoint.getArgs().length
                 +joinPoint.getSignature().toLongString()+" short String="+
                 joinPoint.getSignature().toShortString());
         RecyclerView recyclerView;
         if(joinPoint.getArgs()[0] instanceof   RecyclerView )
         {
+            Log.d(TAG, "instanceof   RecyclerView ");
             recyclerView =(RecyclerView)joinPoint.getArgs()[0];
             StaticItemShowTime.getInstance().reCalculateItemShowTime(recyclerView);
-            Log.d(TAG, "getScroll child" + recyclerView.getChildCount());
+            Log.d(TAG, "getScroll child" + recyclerView.getChildCount()+
+                    "0 position=");
         }else
         {
             return;
@@ -53,5 +55,49 @@ public class GetDataUseAspectJ {
 
     }
 
+    @Pointcut("execution(* *onBindViewHolder(..))")
+    public void onViewBind() {
+
+    }
+
+    @After("onViewBind()")
+    public void afterViewBind(JoinPoint joinPoint) {
+
+        Log.d(TAG, "afterViewBind" + joinPoint.getArgs().length
+                +joinPoint.getSignature().toLongString()+" short String="+
+                joinPoint.getSignature().toShortString());
+
+
+    }
+    @Pointcut("execution(* *onViewAttachedToWindow(..))")
+    public void onAdapterViewAttachedToWindow() {
+
+    }
+    @After("onAdapterViewAttachedToWindow()")
+    public void afterAdapterViewAttachedToWindow(JoinPoint joinPoint) {
+
+        Log.d(TAG, "afterAdapterViewAttachedToWindow" + joinPoint.getArgs().length
+                +joinPoint.getSignature().toLongString()+" short String="+
+                joinPoint.getSignature().toShortString());
+
+
+    }
+
+
+
+    @Pointcut("execution(* *onDraw(..))")
+    public void onViewDraw() {
+
+    }
+
+    @After("onViewDraw()")
+    public void afterViewDraw(JoinPoint joinPoint) {
+
+        Log.d(TAG, "afterViewDraw length" + joinPoint.getArgs().length
+                +joinPoint.getSignature().toLongString()+" short String="+
+                joinPoint.getSignature().toShortString());
+
+
+    }
 
 }

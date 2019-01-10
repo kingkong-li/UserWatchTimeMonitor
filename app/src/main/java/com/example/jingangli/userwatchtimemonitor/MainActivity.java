@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.tendcloud.tenddata.TCAgent;
+import com.tendcloud.tenddata.TDAccount;
+
 /**
  * @author jingang.li
  */
@@ -17,6 +20,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        TCAgent. onRegister("1234567", TDAccount.AccountType.WEIXIN, "Sun");
         mContext=this;
         Button btnEnterRecyclerView=findViewById(R.id.enter_recycler_view);
         btnEnterRecyclerView.setOnClickListener(new View.OnClickListener() {

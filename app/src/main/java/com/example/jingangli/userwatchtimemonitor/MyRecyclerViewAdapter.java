@@ -26,11 +26,11 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         mData=data;
     }
 
-    @Override
-    public void onViewAttachedToWindow(@NonNull MyHolder holder) {
-        super.onViewAttachedToWindow(holder);
-        Log.v(TAG,"onViewAttachedToWindow  "+String.valueOf(holder.nodeName.getText()));
-    }
+//    @Override
+//    public void onViewAttachedToWindow(@NonNull MyHolder holder) {
+//        super.onViewAttachedToWindow(holder);
+//        Log.v(TAG,"onViewAttachedToWindow  "+String.valueOf(holder.nodeName.getText()));
+//    }
 
     @Override
     public void onViewDetachedFromWindow(@NonNull MyHolder holder) {

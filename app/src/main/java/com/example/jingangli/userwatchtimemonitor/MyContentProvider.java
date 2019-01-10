@@ -28,7 +28,7 @@ public class MyContentProvider extends ContentProvider {
     private static final String WATCH_TIME_TABLE_NAME = "watch_time_table";
     private static final int WATCH_TIME_TABLE_ID = 1;
     public static final String AUTHORITY = "com.example.jg.MyProvider";
-    public static final Uri CONTENT_URI_AREA_LIST = Uri.parse("content://" + AUTHORITY + "/watch_time_table");
+    public static final Uri CONTENT_URI_WATCH_TIME_TABLE = Uri.parse("content://" + AUTHORITY + "/watch_time_table");
     private static final UriMatcher URI_MATCHER;
     static{
         URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
@@ -80,7 +80,7 @@ public class MyContentProvider extends ContentProvider {
                 //values要和table的列对应 否则会出现插入错误*
                 rowId = db.insert(WATCH_TIME_TABLE_NAME, null, values);
                 if (rowId > 0){
-                    returnUri = ContentUris.withAppendedId(CONTENT_URI_AREA_LIST, rowId);
+                    returnUri = ContentUris.withAppendedId(CONTENT_URI_WATCH_TIME_TABLE, rowId);
                     getContext().getContentResolver().notifyChange(returnUri, null);
                     return returnUri;
                 }
@@ -130,6 +130,9 @@ public class MyContentProvider extends ContentProvider {
                         + WATCH_TIME_TABLE_NAME
                         + "("
                         + "_id" + " INTEGER PRIMARY KEY"
+                        + TimeTbItem.PATH_ID+ " TEXT,"
+                        + TimeTbItem.ITEM_ID+ " INTEGER,"
+                        + TimeTbItem.SHOW_TIME+ " TEXT,"
                         +" );";
         private static DatabaseHelper mInstance = null;
 
