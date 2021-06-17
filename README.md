@@ -24,4 +24,4 @@ __当一个Item开始显示记录时间,结束显示再记录一次时间__
 ### 2 RecyclerView 观看内容采集
 
 
-
+**博客地址：https://www.jianshu.com/p/f4cd59330ceb**
